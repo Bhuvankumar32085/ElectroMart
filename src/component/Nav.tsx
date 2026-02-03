@@ -2,7 +2,7 @@
 
 import { IUser } from "@/model/user.model";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FiMenu,
   FiX,
@@ -14,7 +14,9 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ProfileModal from "./ProfileModal";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { setLoggedUser } from "@/redux/selices/userSclice";
+import axios from "axios";
 
 const Nav = () => {
   const { loggedUser } = useAppSelector((state) => state.user);
@@ -28,10 +30,27 @@ const Nav = () => {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "Categories", href: "/categories" },
-    { name: "Shop", href: "/shop" },
     { name: "Orders", href: "/orders" },
   ];
 
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get("/api/user/get-curr-user");
+        if (res.data?.success) {
+          dispatch(setLoggedUser(res.data.user));
+        }
+      } catch (error) {
+        console.error(error);
+        dispatch(setLoggedUser(null));
+      }
+    };
+    if (!user) {
+      fetchUser();
+    }
+  }, [dispatch, user]);
 
   return (
     <>
