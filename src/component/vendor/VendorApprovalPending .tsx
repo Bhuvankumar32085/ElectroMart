@@ -23,7 +23,7 @@ const VendorApprovalPending = ({ status, reason, user }: Props) => {
 
   return (
     <div className="min-h-screen  bg-linear-to-br from-[#0b0f1a] via-[#12172a] to-[#0b0f1a] flex items-center  text-cyan-400 justify-center px-6">
-      <Nav user={user} />
+      <Nav />
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
