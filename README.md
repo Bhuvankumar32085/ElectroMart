@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ElectroMart
 
-## Getting Started
+ElectroMart is a full-stack e-commerce platform built using Next.js and Socket.IO.  
+It supports multiple roles (user, vendor, admin) and provides real-time features like live orders, product updates, and notifications.
 
-First, run the development server:
+The project is divided into two main parts:
+1. Next.js application (frontend + backend)
+2. Dedicated Socket.IO server for real-time communication
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Live Links
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Next.js application (frontend + backend):
+https://electro-mart-u5yl.vercel.app
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Socket server:
+https://electromary-socket-server.onrender.com
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Project Overview
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+ElectroMart allows users to browse products, place orders, and track them in real time.  
+Vendors can manage products and orders, while admins control vendor verification.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Real-time updates are handled using a separate socket server to keep the system scalable and responsive.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Roles and Access
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### User
+- Browse products by category
+- Search products
+- Place orders (COD) (ONLINE)
+- Track order status in real time
+- Receive live updates for order status, cancellation, and returns
+
+### Vendor
+- Submit shop details for approval
+- Manage products (add, edit, activate / deactivate)
+- Receive live order notifications
+- Update order status
+- Verify delivery
+- Handle cancelled and returned orders
+
+### Admin
+- Approve or reject vendor requests
+- Manage vendor verification
+- View platform data in real time
+
+---
+
+## Tech Stack
+
+### Frontend
+- Next.js (App Router)
+- React
+- Tailwind CSS
+- Redux Toolkit
+
+### Backend (Next.js)
+- Next.js API routes
+- MongoDB
+- Mongoose
+- NextAuth (authentication)
+
+### Real-Time Server
+- Node.js
+- Express.js
+- Socket.IO
+
+---
+
+## Architecture
+
+- Next.js handles UI and REST APIs
+- Socket server handles real-time communication
+- Backend APIs trigger socket events using REST calls
+- Clients listen to socket events and update UI instantly
+
+This separation keeps the system clean and scalable.
+
+---
+
+## Real-Time Features
+
+- Live product updates
+- Product active / inactive sync
+- Vendor order notifications
+- User order status updates
+- Order cancellation events
+- Order return events
+- Real-time chat support
+- Multi-tab and refresh safe socket handling
+
+---
+
+## Socket Communication
+
+### Client Registration
+
+```js
+socket.emit("user_id_with_socket", {
+  userID: "USER_ID"
+});
