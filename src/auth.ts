@@ -41,7 +41,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account }) {
-      console.log("signIn callback - account:", account);
       if (account?.provider == "google") {
         await connectDB();
         try {

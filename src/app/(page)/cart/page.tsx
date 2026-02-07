@@ -85,7 +85,6 @@ const CartPage = () => {
         newQty,
       });
       if (res.data.success) {
-        console.log(res.data.user.cart);
         alert("Update SuccessFully");
         setCartItems((prev) =>
           prev.map((item) =>
@@ -109,7 +108,6 @@ const CartPage = () => {
         productId,
       });
       if (res.data.success) {
-        console.log(res.data.user.cart);
         alert("Delete SuccessFully");
         setCartItems((prev) =>
           prev.filter((item) => item.product._id !== productId),

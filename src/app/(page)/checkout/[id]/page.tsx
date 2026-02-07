@@ -130,7 +130,6 @@ const CheckOutPage = () => {
       if (isCODAvailable && method == "cod") {
         const res = await axios.post("/api/order/cod", payload);
         if (res.data.success) {
-          console.log(res.data);
           router.push("/orders");
         }
       } else {

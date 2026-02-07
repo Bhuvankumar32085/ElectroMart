@@ -28,8 +28,6 @@ const sideMenu = [
 ];
 
 const AdminDashBoard = () => {
-  const { loggedUser } = useAppSelector((store) => store?.user);
-  console.log(loggedUser);
   const [active, setActive] = useState("dashboard");
 
   return (

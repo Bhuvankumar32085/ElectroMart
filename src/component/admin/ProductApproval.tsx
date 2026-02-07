@@ -22,7 +22,6 @@ const ProductApproval = () => {
   );
   const [rejectedReason, setRejectedReason] = useState<string>("");
 
-  console.log("Vendor Products:", vendorProducts);
 
   const handleApproval = async (
     productId: string | mongoose.Types.ObjectId | undefined,

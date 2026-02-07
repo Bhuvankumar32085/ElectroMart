@@ -21,14 +21,12 @@ const VendorProducts = () => {
     allProducts?.filter((p: IProduct) => p.vendor._id === loggedUser?._id) ||
     [];
 
-  console.log("Vendor Products:", vendorProducts);
 
   const handleToggleActive = async (
     productId: string | undefined,
     currentStatus: boolean,
     verificationStatus?: string,
   ) => { 
-    console.log("Toggling product:", productId, "Current status:", currentStatus,verificationStatus);
     if (verificationStatus !== "approved") {
       alert("Only approved products can be activated/deactivated.");
       return;
@@ -41,7 +39,6 @@ const VendorProducts = () => {
       });
 
       if (res.data.success) {
-        console.log("Toggle successful", res.data.product);
         // update redux
         dispatch(
           setAllProducts(

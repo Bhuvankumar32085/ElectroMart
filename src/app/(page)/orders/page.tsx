@@ -60,7 +60,6 @@ const OrderPage = () => {
       socket.on("update-verify-delivery-status", (data) => {
       const { order } = data;
       if (!order) return;
-      console.log("verify-delivery", order);
       setOrders((prev: IOrder[]) =>
         prev.map((o: IOrder) =>
           o._id?.toString() === order._id?.toString() ? order : o,

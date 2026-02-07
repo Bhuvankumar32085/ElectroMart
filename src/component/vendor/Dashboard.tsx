@@ -59,7 +59,6 @@ export default function AdminDashboard() {
   const activeProducts = vendorProduct.filter((p) => p.isActive).length;
   const outOfStock = vendorProduct.filter((p) => p.stock === 0).length;
 
-  console.log(vendorProduct);
 
   const pendingProducts = vendorProduct.filter(
     (p) => p.verificationStatus === "pending",
@@ -304,7 +303,7 @@ const StatCard: React.FC<StatCardProps> = ({
     className="relative overflow-hidden rounded-2xl bg-slate-900 border border-slate-800 p-6 shadow-xl shadow-black/20 group"
   >
     <div
-      className={`absolute -right-6 -top-6 h-24 w-24 rounded-full bg-gradient-to-br ${gradient} opacity-10 blur-2xl group-hover:opacity-20 transition-opacity`}
+      className={`absolute -right-6 -top-6 h-24 w-24 rounded-full bg-linear-to-br ${gradient} opacity-10 blur-2xl group-hover:opacity-20 transition-opacity`}
     />
     <div className="flex items-center justify-between relative z-10">
       <div>
@@ -314,7 +313,7 @@ const StatCard: React.FC<StatCardProps> = ({
         </h3>
       </div>
       <div
-        className={`p-3 rounded-xl bg-gradient-to-br ${gradient} text-white shadow-lg`}
+        className={`p-3 rounded-xl bg-linear-to-br ${gradient} text-white shadow-lg`}
       >
         <Icon size={24} />
       </div>

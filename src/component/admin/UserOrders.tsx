@@ -104,7 +104,6 @@ const UserOrders = () => {
     fetchOrders();
   }, []);
 
-  console.log(orders);
   if (loading) return <LoadingScreen />;
   if (!orders.length) return <EmptyState />;
 

@@ -166,7 +166,6 @@ export default function AddProductPage() {
       const res = await axios.post("/api/vendor/add-product", formData);
       if (res.data.success) {
         alert("Product added successfully!");
-        console.log("Product added:", res.data.product);
         dispatch(addProduct(res.data.product));
 
         router.push("/");

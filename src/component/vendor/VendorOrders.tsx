@@ -105,7 +105,6 @@ const VendorOrders = () => {
     fetchOrders();
   }, []);
 
-  console.log(orders);
 
   useEffect(() => {
     socket.on("add-user-order-on-vendorOrders", (data) => {
@@ -168,7 +167,6 @@ const VendorOrders = () => {
       });
 
       if (res.data?.success) {
-        console.log(res?.data?.order);
         if (status === "delivered") {
           setSelectedOrderId(orderId);
           setOtp("");

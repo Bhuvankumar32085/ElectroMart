@@ -51,7 +51,6 @@ const ProductPage = () => {
     ?.filter((p) => p.category == product?.category && p._id != product._id)
     .slice(0.6);
 
-  console.log("relatedProduct", product);
 
   const images = product
     ? [
@@ -91,7 +90,6 @@ const ProductPage = () => {
         },
       });
       if (res?.data?.success) {
-        console.log(res.data.product);
         const updateData = allProducts.map((p) =>
           String(p._id) == String(res.data.product._id) ? res.data.product : p,
         );
@@ -129,7 +127,6 @@ const ProductPage = () => {
         quantity,
       });
       if (res.data.success) {
-        console.log(res);
         alert(res.data.message || "add item");
         router.push("/cart");
       }

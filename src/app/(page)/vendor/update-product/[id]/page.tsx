@@ -45,7 +45,6 @@ export default function EditProductPage() {
   const productId = useParams().id as string;
   const { allProducts } = useAppSelector((store) => store.vendor);
   const product = allProducts?.find((p) => String(p._id) === String(productId));
-  console.log("productData:", product);
 
   const [step, setStep] = useState<1 | 2>(1);
   const [errorMsg, setErrorMsg] = useState<string>("");
@@ -180,7 +179,6 @@ export default function EditProductPage() {
       const res = await axios.put("/api/vendor/update-product", formData);
       if (res.data.success) {
         alert("Product updated successfully!");
-        console.log("Product updated:", res.data.product);
         const updatedProduct = allProducts?.map((p) =>
           String(p._id) === String(productId) ? res.data.product : p,
         );

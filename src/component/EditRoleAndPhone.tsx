@@ -28,7 +28,6 @@ const EditRoleAndPhone = () => {
         phone,
       });
       if (res.data.success) {
-        console.log(res.data);
         setSuccess(res.data.message || "Profile updated successfully");
         router.push("/");
       }

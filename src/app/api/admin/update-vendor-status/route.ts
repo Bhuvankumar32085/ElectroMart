@@ -1,14 +1,12 @@
 import { auth } from "@/auth";
 import connectDB from "@/lib/connectDB";
 import User from "@/model/user.model";
-import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   await connectDB();
   try {
     const { vendorId, status, rejectedReason } = await req.json();
-    console.log("Received data:", { vendorId, status, rejectedReason });
     if (!vendorId || !status) {
       return NextResponse.json(
         { message: "Bad Request", success: false },

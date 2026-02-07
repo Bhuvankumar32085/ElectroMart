@@ -28,7 +28,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
         quantity,
       });
       if (res.data.success) {
-        console.log(res);
         alert(res.data.message || "add item");
         router.push("/cart");
       }

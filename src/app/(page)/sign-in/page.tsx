@@ -13,7 +13,6 @@ export default function SigninPage() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const session = useSession();
-  console.log(session?.data?.user);
 
   const handleSignin = async () => {
     setLoading(true);
@@ -25,7 +24,6 @@ export default function SigninPage() {
         redirect: false,
       });
 
-      console.log("Signin success", res);
       router.push("/");
     } catch (error) {
       console.error(error);

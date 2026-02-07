@@ -86,7 +86,6 @@ const CategoryPage = () => {
     fetchProduct();
   }, [activeCategory, searchParams]); // Sirf activeCategory change hone par run hoga
 
-  console.log(products);
 
   return (
     <>

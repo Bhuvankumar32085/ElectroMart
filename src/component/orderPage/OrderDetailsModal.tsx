@@ -48,7 +48,6 @@ const OrderDetailsModal = ({
     daysLeft = isReturnAllowed ? replacementDays - diffInDays : 0;
   }
 
-  console.log(item, order);
 
   const handleCancle = async () => {
     try {

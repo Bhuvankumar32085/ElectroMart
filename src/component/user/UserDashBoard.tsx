@@ -67,7 +67,6 @@ const categories = [
 const UserDashBoard = () => {
   const { allProducts } = useAppSelector((store) => store.vendor);
   const { allVendorData } = useAppSelector((store) => store.vendor);
-  console.log("allVendorData", allVendorData);
   const router = useRouter();
   const filtedProducts = allProducts?.filter((P) => P.isActive);
   const [index, setIndex] = useState(0);
