@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import connectDB from "@/lib/connectDB";
 import User from "@/model/user.model";
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {

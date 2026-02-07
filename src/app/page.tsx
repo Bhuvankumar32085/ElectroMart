@@ -17,7 +17,6 @@ export default async function Home() {
   const user = JSON.parse(
     JSON.stringify(await User.findOne({ email: session?.user?.email })),
   );
-  console.log("user:", user);
   if (!user) {
     redirect("/sign-in");
   }

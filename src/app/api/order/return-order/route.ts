@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import connectDB from "@/lib/connectDB";
 import Order from "@/model/order.model";
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -23,8 +24,8 @@ export async function POST(req: NextRequest) {
     }
 
     const order = await Order.findById(orderId)
-      .populate("buyer", "name email phone image")
-      .populate("productVendor", "name shopName email")
+      .populate("buyer")
+      .populate("productVendor")
       .populate({
         path: "products.product",
         model: "Product",
@@ -62,6 +63,15 @@ export async function POST(req: NextRequest) {
     order.orderStatus = "returned";
     order.returnedAmount = returnedAmount;
     await order.save();
+
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_SOCKET_URL}/order-returned`, {
+        order,
+        vendorId: order.productVendor._id,
+      });
+    } catch (e) {
+      console.error("Socket notify failed", e);
+    }
 
     return NextResponse.json(
       {

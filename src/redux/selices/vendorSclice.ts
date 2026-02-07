@@ -23,11 +23,35 @@ const vendorSlice = createSlice({
       state.allProducts = action.payload;
     },
     addProduct(state, action) {
-      state.allProducts.push(action.payload); 
+      state.allProducts.push(action.payload);
     },
+    updateProduct: (state, action) => {
+      const updated = action.payload;
+
+      const index = state.allProducts.findIndex((p) => p._id === updated._id);
+
+      if (index !== -1) {
+        state.allProducts[index] = updated;
+      }
+    },
+    updateProductActive: (state, action) => {
+      const updated = action.payload;
+
+      const index = state.allProducts.findIndex((p) => p._id === updated._id);
+
+      if (index !== -1) {
+        state.allProducts[index].isActive = updated.isActive;
+      }
+    },
+    // vendorSlice.ts
   },
 });
 
-export const { setAllVendorData, setAllProducts, addProduct } =
-  vendorSlice.actions;
+export const {
+  setAllVendorData,
+  setAllProducts,
+  addProduct,
+  updateProductActive,
+  updateProduct,
+} = vendorSlice.actions;
 export default vendorSlice.reducer;

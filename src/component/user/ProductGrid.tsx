@@ -28,8 +28,8 @@ const ProductGrid = ({ products }: ProductGridProps) => {
   mb-5
 "
     >
-      {products.map((product, i) => (
-        <ProductCard key={i} product={product} />
+      {products.map((product) => (
+        <ProductCard key={String(product._id)} product={product} />
       ))}
     </motion.div>
   );

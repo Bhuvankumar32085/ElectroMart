@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import connectDB from "@/lib/connectDB";
 import Order from "@/model/order.model";
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 // cod
@@ -23,7 +24,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(orderId)
+      .populate("buyer")
+      .populate("productVendor")
+      .populate({
+        path: "products.product",
+        model: "Product",
+        select: "title image1 category stock vendor replacementDays",
+      });
     if (!order) {
       return NextResponse.json(
         { message: "order not found", success: false },
@@ -34,6 +42,18 @@ export async function POST(req: NextRequest) {
     order.orderStatus = "cancelled";
     order.cancelledAt = new Date();
     await order.save();
+
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_SOCKET_URL}/order-cancelled`,
+        {
+          order,
+          vendorId: order.productVendor._id,
+        },
+      );
+    } catch (e) {
+      console.error("Socket notify failed", e);
+    }
 
     return NextResponse.json(
       {

@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { deleteFromCloudinary, uploadToCloudinary } from "@/lib/cloudinary";
 import connectDB from "@/lib/connectDB";
 import Product from "@/model/product.model";
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req: NextRequest) {
@@ -115,6 +116,17 @@ export async function PUT(req: NextRequest) {
 
     await product.save();
     await product.populate("vendor");
+
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_SOCKET_URL}/update-product-realtime`,
+        {
+          product,
+        },
+      );
+    } catch (err) {
+      console.error("Socket notify failed", err);
+    }
 
     return NextResponse.json(
       {

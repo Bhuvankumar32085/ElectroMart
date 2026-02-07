@@ -13,6 +13,7 @@ import {
   Truck,
   X,
 } from "lucide-react";
+import { socket } from "@/HookHelper";
 
 type OrderStatus =
   | "pending"
@@ -21,11 +22,6 @@ type OrderStatus =
   | "delivered"
   | "cancelled"
   | "returned";
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: { y: 0, opacity: 1 },
-};
 
 const StatusBadge = ({ status }: { status: OrderStatus }) => {
   const map: Record<
@@ -110,6 +106,49 @@ const VendorOrders = () => {
   }, []);
 
   console.log(orders);
+
+  useEffect(() => {
+    socket.on("add-user-order-on-vendorOrders", (data) => {
+      const { order } = data;
+      if (!order?._id) return;
+
+      setOrders((prev) => {
+        const alreadyExists = prev.some(
+          (o) => o._id?.toString() === order._id.toString(),
+        );
+
+        if (alreadyExists) return prev; // 🔥 yahin bug fix
+
+        return [order, ...prev];
+      });
+    });
+
+    return () => {
+      socket.off("add-user-order-on-vendorOrders");
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.on("order-returned", ({ order }) => {
+      if (!order?._id) return;
+      setOrders((prev) => prev?.map((o) => (o._id === order._id ? order : o)));
+    });
+
+    return () => {
+      socket.off("order-returned");
+    };
+  }, [setOrders]);
+
+  useEffect(() => {
+    socket.on("order-cancelled", ({ order }) => {
+      if (!order?._id) return;
+      setOrders((prev) => prev?.map((o) => (o._id === order._id ? order : o)));
+    });
+
+    return () => {
+      socket.off("order-cancelled");
+    };
+  }, []);
 
   const ORDER_STATUS_OPTIONS: OrderStatus[] = [
     "pending",
@@ -240,10 +279,11 @@ const VendorOrders = () => {
               <tbody className="divide-y divide-white/5">
                 {orders.map((order) => {
                   const item = order.products[0];
+
                   return (
                     <motion.tr
                       key={order._id?.toString()}
-                      variants={itemVariants}
+                      // variants={itemVariants}
                       className="hover:bg-white/2 transition-colors group"
                     >
                       <td className="p-5 text-white/60 font-mono">
@@ -333,7 +373,7 @@ const VendorOrders = () => {
               return (
                 <motion.div
                   key={order._id?.toString()}
-                  variants={itemVariants}
+                  // variants={itemVariants}
                   className="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-md active:scale-[0.99] transition-transform"
                 >
                   <div className="flex justify-between items-start mb-4">

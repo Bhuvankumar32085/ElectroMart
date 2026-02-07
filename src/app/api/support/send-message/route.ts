@@ -3,6 +3,7 @@ export const runtime = "nodejs";
 import { auth } from "@/auth";
 import connectDB from "@/lib/connectDB";
 import User from "@/model/user.model";
+import axios from "axios";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -115,6 +116,15 @@ export async function POST(req: NextRequest) {
     receiverChat.updatedAt = new Date();
 
     await receiver.save();
+
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_SOCKET_URL!}/chat-update`, {
+        receiverId,
+        message,
+      });
+    } catch (error) {
+      console.error(error);
+    }
 
     return NextResponse.json(
       { success: true, message: "Message sent successfully" },

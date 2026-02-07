@@ -9,7 +9,7 @@ import {
   ShoppingBag,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import {  useState } from "react";
 
 interface InfoRowProps {
   icon?: LucideIcon | null;
@@ -110,6 +110,7 @@ const OrderDetailsModal = ({
       setCancleLoading(false);
     }
   };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

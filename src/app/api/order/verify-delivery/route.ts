@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import connectDB from "@/lib/connectDB";
 import Order from "@/model/order.model";
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 // cod
@@ -55,6 +56,18 @@ export async function POST(req: NextRequest) {
     order.deliveryOtp = "";
     order.otpExpiresAt = undefined;
     await order.save();
+
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_SOCKET_URL!}/update-verify-delivery-status`,
+        {
+          order,
+          userId: order.buyer._id,
+        },
+      );
+    } catch (error) {
+      console.error(error);
+    }
 
     return NextResponse.json(
       {

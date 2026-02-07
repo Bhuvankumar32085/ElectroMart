@@ -2,6 +2,7 @@
 
 import connectDB from "@/lib/connectDB";
 import Product from "@/model/product.model";
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req: NextRequest) {
@@ -19,6 +20,21 @@ export async function PUT(req: NextRequest) {
         { success: false, message: "Product not found" },
         { status: 404 },
       );
+    }
+
+    // after product update
+
+    const safeProduct = product.toObject(); //  VERY IMPORTANT
+
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_SOCKET_URL}/update-product-active`,
+        {
+          product: safeProduct,
+        },
+      );
+    } catch (err) {
+      console.error("Socket notify failed", err);
     }
 
     return NextResponse.json(

@@ -18,7 +18,6 @@ const VendorApproval = () => {
   const [selectedVendor, setSelectedVendor] = useState<IUser | null>(null);
   const [reason, setReason] = useState("");
   const [loadingVendorId, setLoadingVendorId] = useState<string | null>(null);
-
   const pendingVendors: IUser[] = allVendorData?.filter(
     (v) => v.role === "vendor" && v.verificationStatus === "pending",
   );

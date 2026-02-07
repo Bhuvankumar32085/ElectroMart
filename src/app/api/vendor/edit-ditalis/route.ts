@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
           message: `${missingFields.join(", ")} is required`,
           success: false,
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     if (!session?.user) {
       return NextResponse.json(
         { message: "Unauthorized", success: false },
-        { status: 401 }
+        { status: 401 },
       );
     }
     const user = await User.findOne({
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
           message: `User Not Found`,
           success: false,
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -52,19 +52,20 @@ export async function POST(req: NextRequest) {
     user.requestedAt = new Date();
 
     await user.save();
+
     return NextResponse.json(
       {
         message: `Vendor Details Update SuccessFully`,
         user,
         success: true,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error(error);
     return NextResponse.json(
       { message: "Server error", success: false },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

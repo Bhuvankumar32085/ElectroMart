@@ -43,7 +43,7 @@ const ProductPage = () => {
   const [showReview, setShowReview] = useState(false);
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
-  const router=useRouter()
+  const router = useRouter();
   const product = allProducts.find(
     (p: IProduct) => String(p._id) === String(id),
   );
@@ -71,6 +71,7 @@ const ProductPage = () => {
 
     return () => clearInterval(timer);
   }, [images.length]);
+ 
 
   const handleReview = async () => {
     setReviewLoading(true);
@@ -130,7 +131,7 @@ const ProductPage = () => {
       if (res.data.success) {
         console.log(res);
         alert(res.data.message || "add item");
-        router.push('/cart')
+        router.push("/cart");
       }
     } catch (error) {
       console.error(error);
@@ -248,7 +249,9 @@ const ProductPage = () => {
               {product.payOnDelivery && badge("Cash on Delivery")}
               {badge(`Warranty: ${product.warranty}`)}
               {badge(`Replacement: ${product.replacementDays} Days`)}
-              {product.isStockAvailable && product.stock > 0 && badge("In Stock")}
+              {product.isStockAvailable &&
+                product.stock > 0 &&
+                badge("In Stock")}
             </div>
 
             {product.sizes &&

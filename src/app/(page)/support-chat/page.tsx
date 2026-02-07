@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import axios from "axios";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -16,6 +16,7 @@ import {
   User,
 } from "lucide-react";
 import { useAppSelector } from "@/redux/hooks";
+import { socket } from "@/HookHelper";
 
 interface ApiResponse {
   success: boolean;
@@ -40,6 +41,18 @@ const SupportChat = () => {
   const [message, setMessage] = useState("");
   const [messageData, setMessageData] = useState<IMessage[]>([]);
   const { loggedUser } = useAppSelector((state) => state.user);
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // 2. Ye function view ko neeche scroll karega
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // 3. Jab bhi 'messageData' change ho ya 'selectedUser' badle, ye chalega
+  useEffect(() => {
+    scrollToBottom();
+  }, [messageData, selectedUser]);
 
   useEffect(() => {
     const fetchActiveUsers = async () => {
@@ -118,6 +131,26 @@ const SupportChat = () => {
       console.error(err);
     }
   };
+
+  useEffect(() => {
+    socket.on("update_chat", (data) => {
+      const { message } = data;
+      if (!message) return;
+
+      const newMessage: IMessage = {
+        _id: crypto.randomUUID(),
+        sender: message.sender,
+        text: message.text,
+        createdAt: new Date().toISOString(),
+      };
+
+      setMessageData((prev) => [...prev, newMessage]);
+    });
+
+    return () => {
+      socket.off("update_chat");
+    };
+  }, []);
 
   console.log(messageData);
 
@@ -345,6 +378,7 @@ const SupportChat = () => {
                   </motion.div>
                 );
               })}
+            <div ref={messagesEndRef} />
             </>
           ) : (
             /* Empty State */
@@ -361,6 +395,7 @@ const SupportChat = () => {
               </p>
             </div>
           )}
+          
         </div>
 
         {/* Input Area */}
@@ -392,7 +427,7 @@ const SupportChat = () => {
           </div>
         )}
       </main>
-    </div>
+    </div> 
   );
 };
 

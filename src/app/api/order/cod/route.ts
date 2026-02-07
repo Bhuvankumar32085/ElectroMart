@@ -3,6 +3,7 @@ import connectDB from "@/lib/connectDB";
 import Order from "@/model/order.model";
 import Product, { IProduct } from "@/model/product.model";
 import User from "@/model/user.model";
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 interface CartItem {
@@ -115,6 +116,28 @@ export async function POST(req: NextRequest) {
     );
     user.orders.push(order._id);
     await user.save();
+
+    const populatedOrder = await Order.findById(order._id)
+      .populate("buyer", "name email phone image")
+      .populate("productVendor", "name shopName email")
+      .populate({
+        path: "products.product",
+        model: "Product",
+        select: "title image1 category stock vendor replacementDays",
+      })
+      .lean(); //Socket ko bhejne se pehle order ko plain object banao
+
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_SOCKET_URL!}/add-user-order-on-vendorOrders`,
+        {
+          order: populatedOrder,
+          productVendor: product.vendor,
+        },
+      );
+    } catch (error) {
+      console.error(error);
+    }
 
     return NextResponse.json(
       {

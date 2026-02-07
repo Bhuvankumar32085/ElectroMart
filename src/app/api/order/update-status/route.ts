@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import connectDB from "@/lib/connectDB";
 import Order from "@/model/order.model";
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 // cod
@@ -23,7 +24,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(orderId)
+      .populate("buyer")
+      .populate("productVendor")
+      .populate({
+        path: "products.product",
+        model: "Product",
+        select: "title image1 category stock vendor replacementDays",
+      });
 
     if (!order) {
       return NextResponse.json(
@@ -36,6 +44,19 @@ export async function POST(req: NextRequest) {
       order.orderStatus = status;
       order.deliveryOtp = "";
       await order.save();
+
+      try {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_SOCKET_URL!}/update-user-order-status`,
+          {
+            order,
+            userId: order.buyer._id,
+          },
+        );
+      } catch (error) {
+        console.error(error);
+      }
+
       return NextResponse.json(
         { message: "order status updated", order, success: true },
         { status: 200 },
@@ -47,6 +68,19 @@ export async function POST(req: NextRequest) {
       order.deliveryOtp = otp;
       order.otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
       await order.save();
+
+      try {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_SOCKET_URL!}/update-user-order-status`,
+          {
+            order,
+            userId: order.buyer._id,
+          },
+        );
+      } catch (error) {
+        console.error(error);
+      }
+
       return NextResponse.json(
         { message: "Order Delevierd", order, success: true },
         { status: 200 },

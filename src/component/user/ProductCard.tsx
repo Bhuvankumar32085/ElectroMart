@@ -43,14 +43,16 @@ const ProductCard = ({ product }: ProductCardProps) => {
       setLoading(false);
     }
   };
+
+  
   return (
     <motion.div
       onClick={() => router.push(`/user/product-page/${product._id}`)}
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      whileHover={{ scale: 1.03 }}
-      transition={{ duration: 0.4 }}
+      // initial={{ opacity: 0, y: 40 }}
+      // whileInView={{ opacity: 1, y: 0 }}
+      // viewport={{ once: true }}
+      // whileHover={{ scale: 1.03 }}
+      // transition={{ duration: 0.4 }}
       className="
         group relative
         rounded-2xl

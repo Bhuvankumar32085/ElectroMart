@@ -9,6 +9,7 @@ import OrderDetailsModal from "@/component/orderPage/OrderDetailsModal";
 import MobileOrderCard from "@/component/orderPage/MobileOrderCard";
 import DesktopOrderRow from "@/component/orderPage/DesktopOrderRow";
 import Nav from "@/component/Nav";
+import { socket } from "@/HookHelper";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -37,6 +38,39 @@ const OrderPage = () => {
       }
     };
     fetchOrders();
+  }, []);
+
+  useEffect(() => {
+    socket.on("update-user-order-status", (data) => {
+      const { order } = data;
+      if (!order) return;
+      setOrders((prev: IOrder[]) =>
+        prev.map((o: IOrder) =>
+          o._id?.toString() === order._id?.toString() ? order : o,
+        ),
+      );
+    });
+
+    return () => {
+      socket.off("update-user-order-status");
+    };
+  }, []);
+
+  useEffect(() => {
+      socket.on("update-verify-delivery-status", (data) => {
+      const { order } = data;
+      if (!order) return;
+      console.log("verify-delivery", order);
+      setOrders((prev: IOrder[]) =>
+        prev.map((o: IOrder) =>
+          o._id?.toString() === order._id?.toString() ? order : o,
+        ),
+      );
+    });
+
+    return () => {
+      socket.off("update-verify-delivery-status");
+    };
   }, []);
 
   if (loading) return <LoadingScreen />;

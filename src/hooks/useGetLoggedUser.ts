@@ -8,7 +8,7 @@ import { useAppDispatch } from "@/redux/hooks";
 export const useGetLoggedUser = () => {
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
+  useEffect(() => { 
     const fetchUser = async () => {
       try {
         const res = await axios.get("/api/user/get-curr-user");

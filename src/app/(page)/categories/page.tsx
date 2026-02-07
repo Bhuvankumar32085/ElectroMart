@@ -8,6 +8,7 @@ import Nav from "@/component/Nav";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { IProduct } from "@/model/product.model";
+import { useAppSelector } from "@/redux/hooks";
 
 interface IReview {
   rating?: number;
@@ -29,11 +30,11 @@ const categories = [
 const CategoryPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const allProducts = useAppSelector((state) => state.vendor.allProducts);
   const initialCategory = searchParams.get("category") || "All";
   const [activeCategory, setActiveCategory] = useState<string>(initialCategory);
 
-  const [products, setProducts] = useState<IProduct[]>([]);
+  const [products, setProducts] = useState<IProduct[]>(allProducts);
   const [loading, setLoading] = useState(false);
 
   const getAverageRating = (reviews: IReview[]) => {
@@ -84,6 +85,8 @@ const CategoryPage = () => {
 
     fetchProduct();
   }, [activeCategory, searchParams]); // Sirf activeCategory change hone par run hoga
+
+  console.log(products);
 
   return (
     <>
@@ -154,18 +157,14 @@ const CategoryPage = () => {
                   layout
                   className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6"
                 >
-                  {products.map((product: IProduct, i) => {
+                  {products.map((product: IProduct) => {
                     const rating = getAverageRating(product.reviews || []);
                     const isOutOfStock =
                       !product.isStockAvailable || product.stock <= 0;
 
                     return (
                       <motion.div
-                        layout
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        whileHover={{ y: -5 }}
-                        key={i}
+                        key={String(product._id)}
                         onClick={() =>
                           router.push(`/user/product-page/${product._id}`)
                         }

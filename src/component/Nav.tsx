@@ -21,7 +21,6 @@ import axios from "axios";
 const Nav = () => {
   const { loggedUser } = useAppSelector((state) => state.user);
   const user: IUser | null = loggedUser;
-  console.log("Nav loggedUser:", loggedUser);
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
