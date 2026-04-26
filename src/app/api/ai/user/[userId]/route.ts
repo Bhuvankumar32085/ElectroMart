@@ -1,35 +1,50 @@
 import connectDB from "@/lib/connectDB";
 import User from "@/model/user.model";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 
 export async function GET(
-  req: Request,
-  context: { params: Promise<{ userId: string }> } // ✅ string hona chahiye
+  req: NextRequest,
+  context: { params: Promise<{ userId: string }> } // ✅ Promise correct
 ) {
   await connectDB();
 
-  const { userId } = await context.params;
+  const params = await context.params; // ✅ MUST await
+  const userId = params?.userId;
 
   console.log("Raw userId:", userId);
 
+  // 🔐 safety check (IMPORTANT)
+  if (!userId) {
+    return NextResponse.json(
+      { error: "UserId missing" },
+      { status: 400 }
+    );
+  }
+
   let cleanUserId = userId;
 
-  // 🔥 JSON aaya to parse karo
-  if (userId.startsWith("{")) {
+  // 🔥 JSON parse (LLM bug handle)
+  if (typeof userId === "string" && userId.startsWith("{")) {
     try {
       const parsed = JSON.parse(userId);
       cleanUserId = parsed.user_id;
-    } catch (e) {
-      return NextResponse.json({ error: "Invalid userId format" }, { status: 400 });
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid userId format" },
+        { status: 400 }
+      );
     }
   }
 
   console.log("Clean userId:", cleanUserId);
 
-  // 🔐 validation
+  // 🔐 ObjectId validation
   if (!mongoose.Types.ObjectId.isValid(cleanUserId)) {
-    return NextResponse.json({ error: "Invalid userId" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Invalid userId" },
+      { status: 400 }
+    );
   }
 
   try {
@@ -37,17 +52,18 @@ export async function GET(
       "name role orders cart email"
     );
 
-    console.log("User found:", user);
-
     if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "User not found" },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json({
       name: user.name,
       role: user.role,
-      ordersCount: user.orders?.length || 0,
       email: user.email,
+      ordersCount: user.orders?.length || 0,
       cartItems: user.cart?.length || 0,
     });
 
