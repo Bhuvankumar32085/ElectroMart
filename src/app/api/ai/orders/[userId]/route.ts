@@ -9,7 +9,8 @@ export async function GET(
 ) {
   await connectDB();
 
-  const { userId } = await context.params;
+  const params = await context.params;
+  const userId = params.userId;
 
   console.log("Raw userId:", userId);
 
