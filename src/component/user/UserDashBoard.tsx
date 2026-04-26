@@ -21,6 +21,7 @@ import { useAppSelector } from "@/redux/hooks";
 import ProductGrid from "./ProductGrid";
 import { useRouter } from "next/navigation";
 import ShopCard from "../ShopCard";
+import ChatBot from "../ChatBot";
 
 /* ---------------- HERO SLIDER DATA ---------------- */
 const images = [
@@ -247,6 +248,7 @@ const UserDashBoard = () => {
         </h2>
         <ShopCard allVendorData={verifiedVendor} />
       </div>
+      <ChatBot />
     </motion.div>
   );
 };

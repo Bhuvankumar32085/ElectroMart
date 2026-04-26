@@ -20,12 +20,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (session.user.role !== "vendor") {
-      return NextResponse.json(
-        { success: false, message: "Forbidden" },
-        { status: 403 },
-      );
-    }
+    // if (session.user.role !== "vendor") {
+    //   return NextResponse.json(
+    //     { success: false, message: "Forbidden" },
+    //     { status: 403 },
+    //   );
+    // }
 
     const formData = await req.formData();
     const title = formData.get("title") as string;
